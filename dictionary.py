@@ -1,4 +1,10 @@
-#! /home/anthonyz/anaconda3/bin/python3
+## for ubuntu
+#-! /home/anthonyz/anaconda3/bin/python3
+
+# for mint
+#!/home/zeski/anaconda3/bin/python3
+ 
+
 """
 Author: Anthony Zelinsky
 Created 5/28/2019
