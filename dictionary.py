@@ -17,7 +17,7 @@ To create an interactive dictionary to input words and retrieve definitions
 import json
 import os
 
-
+from difflib import  get_close_matches as gcm
 
 
 
@@ -48,7 +48,7 @@ def adding_word(word):
 
 def finding_word():
     """
-    This is the main function of the program. This will be used to input a word, and look it up within the data file.
+    This is the most important function of the program. This will be used to input a word, and look it up within the data file.
 
     """
     ## Accepting user input
@@ -62,22 +62,54 @@ def finding_word():
         return print("Word: {}\nDefinition: {}\n".format(word, data[word][0]))
     except:
         ## If the word is not located within the data file. It will inform user that it is not located within data file and ask to insert the word.
+        
         print("That word does not exist in the dictionary.")
+        
+        potential_matches = False
+        if len(gcm(word, data.keys())) > 0:
+            print("\nHere are potential matches for your word - {}: ".format(word))
+            print(gcm(word, data.keys(), 10))
+            choose_word = input("\nIs the word your looking for in above list? [y/n] ")
+        
+            if (choose_word.lower() != 'y') and (choose_word.lower() != 'n'): 
+                while True: 
+                    choose_word = input("Error! Please input y or n: ")
+                    if (choose_word.lower() == 'y') or (choose_word.lower() == 'n'): break
+                    else: pass
+            if choose_word =="y": 
+                newword = input("\nInput the word: ")
+                try: 
+                    print(data[newword.lower().strip()][0])
+                except: 
+                    while True: 
+                        print("Try Again, check for mispellings: ")
+                        print(gcm(word, data.keys(), 10))
+                        newword = input("\nInput the word: ")
+                        try: 
+                            print(data[newword.lower().strip()][0])
+                            break
+                        except: pass
+                        
+                potential_matches = True
+            else: pass
+        else: pass 
+    
+        if potential_matches == False:                 
         ## Asking the user if they would like to add the word.
-        add_it = input("Would you like to add the word? [y/n]: ").lower()
+            add_it = input("\nWould you like to add the word? [y/n]: ").lower()
         ## Flow control for add it key
-        if (add_it != "y") and (add_it != 'n'):
-            while True:
-                add_it = input("Error! Please Enter y or n")
-                if (add_it == "y") or (add_it == "n"):
-                    break
-                else:
-                    pass
-
-        if add_it == "y":
-            adding_word(word)
-        elif add_it == "n":
-            print("Word not added!")
+            if (add_it != "y") and (add_it != 'n'):
+                while True:
+                    add_it = input("Error! Please Enter y or n")
+                    if (add_it == "y") or (add_it == "n"):
+                        break
+                    else:
+                        pass
+                
+            if add_it == "y":
+                adding_word(word)
+            elif add_it == "n":
+                print("Word not added!")
 
 def dictionary():
     while True:
